@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menus", "Menus\Menus\Menus.csproj", "{D38A5569-658E-4151-8212-9FF154EFDEFD}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "MenusContent", "Menus\MenusContent\MenusContent.contentproj", "{CC229BF2-0E18-43F2-AE5C-C37CFCDD1BB9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D38A5569-658E-4151-8212-9FF154EFDEFD}.Debug|x86.ActiveCfg = Debug|x86
+		{D38A5569-658E-4151-8212-9FF154EFDEFD}.Debug|x86.Build.0 = Debug|x86
+		{D38A5569-658E-4151-8212-9FF154EFDEFD}.Release|x86.ActiveCfg = Release|x86
+		{D38A5569-658E-4151-8212-9FF154EFDEFD}.Release|x86.Build.0 = Release|x86
+		{CC229BF2-0E18-43F2-AE5C-C37CFCDD1BB9}.Debug|x86.ActiveCfg = Debug|x86
+		{CC229BF2-0E18-43F2-AE5C-C37CFCDD1BB9}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4AB6C0E0-10A0-4F5D-B1E9-7B834994088F}
+	EndGlobalSection
+EndGlobal
