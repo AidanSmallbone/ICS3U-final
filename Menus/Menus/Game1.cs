@@ -13,12 +13,11 @@ namespace Menus
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch SpriteBatch;
-        SpriteFont Font1;
+        GraphicsDeviceManager graphics; //declare graphics engine
+        SpriteBatch SpriteBatch; //declare spritebatch
 
-        Texture2D titleScreenBackground;
-        Texture2D titleScreenLogo;
+        //button textures
+
         Texture2D aboutButtonIdle;
         Texture2D aboutButtonSelected;
         Texture2D controlsButtonIdle;
@@ -27,9 +26,6 @@ namespace Menus
         Texture2D quitGameButtonSelected;
         Texture2D startGameButtonIdle;
         Texture2D startGameButtonSelected;
-        Texture2D stageSelectHeader;
-        Texture2D northWesternLogo;
-        Texture2D centralLogo;
         Texture2D leftArrowIdle;
         Texture2D leftArrowSelected;
         Texture2D rightArrowIdle;
@@ -38,8 +34,28 @@ namespace Menus
         Texture2D backButtonSelected;
         Texture2D doneButtonIdle;
         Texture2D doneButtonSelected;
+        Texture2D showControlsButtonIdle;
+        Texture2D showControlsButtonSelected;
+
+        //header textures
+
+        Texture2D stageSelectHeader;
+        Texture2D controlsHeader;
+        Texture2D aboutHeader;
         Texture2D characterSelectHeader;
-        Texture2D characterSelectPane;
+
+        //logo textures
+
+        Texture2D northWesternLogo;
+        Texture2D centralLogo;
+        Texture2D titleScreenLogo;
+
+        //background textures
+
+        Texture2D titleScreenBackground;
+
+        //character icon textures
+
         Texture2D characterOneIcon;
         Texture2D characterTwoIcon;
         Texture2D characterThreeIcon;
@@ -49,240 +65,203 @@ namespace Menus
         Texture2D characterSevenIcon;
         Texture2D characterEightIcon;
         Texture2D characterNineIcon;
+
+        //misc. ui elements
+
         Texture2D playerOneSelectedCharacter;
         Texture2D playerTwoSelectedCharacter;
         Texture2D controllerIdle;
         Texture2D dPadControls;
         Texture2D buttonControls;
         Texture2D startControls;
-        Texture2D controlsHeader;
-        Texture2D aboutHeader;
         Texture2D controllerSelected;
-        Texture2D showControlsButtonIdle;
-        Texture2D showControlsButtonSelected;
         Texture2D infoPane;
+        Texture2D characterSelectPane;
 
+        //variable to keep track of which menu is selected
 
         string activeMenu;
+
+        //variables to keep track of user controller input
+
         string playerOnePressedControl = "blank"; //1, 2, 3, 4, up, down, left, right, start, blank (Player One input)
         string playerTwoPressedControl = "blank"; //1, 2, 3, 4, up, down, left, right, start, blank (Player Two input)
+
+        //variables to use as timers
+
         int Ticks = 0;
         int playerOneTicks = 0;
         int playerTwoTicks = 0;
         int globalTicks = 0;
 
+        //variables to keep track of the selected item on menus
+
         int startMenuSelectedItem = 1;
         int stageSelectMenuSelectedItem = 1;
-        int quitGameMenuSelectedItem = 1;
         int controlsMenuSelectedItem = 1;
         int aboutMenuSelectedItem = 1;
         int characterSelectMenuSelectedItem = 1;
         int pauseMenuSelectedItem = 1;
         int resetGameMenuSelectedItem = 1;
+        bool showControls = false;
+
+        //variables to keep track of selected stage, character, etc.
+
         int selectedStage = 1;
         int playerOneCharacter = 1;
         int playerTwoCharacter = 1;
         bool playerOneReady = false;
         bool playerTwoReady = false;
-        bool showControls = false;
 
-        private void updateStartScreen()
+        private void updateStartScreen() //logic and input for start screen
         {
-            Ticks++;
+            Ticks++; //add to timer every update
 
-            switch (playerOnePressedControl)
+            switch (playerOnePressedControl) //change menu item based on user input
             {
-                case "up":
-                    if (Ticks >= 10) { startMenuSelectedItem--; Ticks = 0; }
-                    break;
-                case "down":
-                    if (Ticks >= 10) { startMenuSelectedItem++; Ticks = 0; }
-                    break;
+                case "up": if (Ticks >= 10) { startMenuSelectedItem--; Ticks = 0; } break;
+                case "down": if (Ticks >= 10) { startMenuSelectedItem++; Ticks = 0; } break;
             }
+
+            //only allow the selected item variable to reach set values
 
             if (startMenuSelectedItem < 1) { startMenuSelectedItem = 1; }
             if (startMenuSelectedItem > 4) { startMenuSelectedItem = 4; }
 
+            //changes the active menu or closes the game based on which button the user presses
+
             switch (startMenuSelectedItem)
             {
-                case 1:
-                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; }
-                    break;
-                case 2:
-                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "controls"; globalTicks = 0; }
-                    break;
-                case 3:
-                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "about"; globalTicks = 0; }
-                    break;
-                case 4:
-                    if (playerOnePressedControl == "1") { this.Exit(); }
-                    break;
-                case 5:
-                    if (playerOnePressedControl == "start" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; }
-                    break;
+                case 1: if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; } break; //open stage select menu
+                case 2: if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "controls"; globalTicks = 0; } break; //open controls menu
+                case 3: if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "about"; globalTicks = 0; } break; //open about menu
+                case 4: if (playerOnePressedControl == "1") { this.Exit(); } break; //close the game
+                case 5: if (playerOnePressedControl == "start" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; } break; //open stage select menu
             }
         }
 
-        private void updateStageSelectScreen()
+        private void updateStageSelectScreen() //logic and input for stage select screen
         {
-            Ticks++;
+            Ticks++; //add to timer every update
 
-            switch (playerOnePressedControl)
+            switch (playerOnePressedControl) //change menu item based on user input
             {
-                case "left":
-                    if (Ticks >= 10) { stageSelectMenuSelectedItem--; Ticks = 0; }
-                    break;
-                case "right":
-                    if (Ticks >= 10) { stageSelectMenuSelectedItem++; Ticks = 0; }
-                    break;
-                case "down":
-                    if (Ticks >= 10) { stageSelectMenuSelectedItem = 3; Ticks = 0; }
-                    break;
+                case "left": if (Ticks >= 10) { stageSelectMenuSelectedItem--; Ticks = 0; } break;
+                case "right": if (Ticks >= 10) { stageSelectMenuSelectedItem++; Ticks = 0; } break;
+                case "down": if (Ticks >= 10) { stageSelectMenuSelectedItem = 3; Ticks = 0; } break;
             }
+
+            //only allow the selected item variable to reach set values
 
             if (stageSelectMenuSelectedItem <= 1) { stageSelectMenuSelectedItem = 1; }
             if (stageSelectMenuSelectedItem > 4) { stageSelectMenuSelectedItem = 4; }
 
-            switch (stageSelectMenuSelectedItem)
+            switch (stageSelectMenuSelectedItem) //select the stage and move on to the next menu based on user input
             {
-                case 1:
-                    {
-                        if (playerOnePressedControl == "1") { selectedStage = 1; }
-                        break;
-                    }
-                case 2:
-                    {
-                        if (playerOnePressedControl == "1") { selectedStage = 2; }
-                        break;
-                    }
-                case 3:
-                    {
-                        if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; }
-                        break;
-                    }
-                case 4:
-                    {
-                        if (playerOnePressedControl == "1") { activeMenu = "characterSelect"; }
-                        break;
-                    }
+                case 1: if (playerOnePressedControl == "1") { selectedStage = 1; } break;                
+                case 2: if (playerOnePressedControl == "1") { selectedStage = 2; } break;    
+                case 3: if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; } break;
+                case 4: if (playerOnePressedControl == "1") { activeMenu = "characterSelect"; } break;               
             }
         }
 
-        private void updateControlsScreen()
+        private void updateControlsScreen() //logic and input for controls screen
         {
-            Ticks++;
+            Ticks++; //add to timer every update
 
-            switch (playerOnePressedControl)
+            switch (playerOnePressedControl) //change menu item based on user input
             {
-                case "left":
-                    if (Ticks >= 10) { controlsMenuSelectedItem--; Ticks = 0; }
-                    break;
-                case "right":
-                    if (Ticks >= 10) { controlsMenuSelectedItem++; Ticks = 0; }
-                    break;
+                case "left": if (Ticks >= 10) { controlsMenuSelectedItem--; Ticks = 0; } break;
+                case "right": if (Ticks >= 10) { controlsMenuSelectedItem++; Ticks = 0; } break;
                 case "1":
-                    if (controlsMenuSelectedItem == 2 && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; };
-                    if (controlsMenuSelectedItem == 1 && showControls == false && Ticks >= 10) { showControls = true; Ticks = 0; };
-                    if (controlsMenuSelectedItem == 1 && showControls == true && Ticks >= 10) { showControls = false; Ticks = 0; };
-                    break;
+                if (controlsMenuSelectedItem == 2 && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; };
+                if (controlsMenuSelectedItem == 1 && showControls == false && Ticks >= 10) { showControls = true; Ticks = 0; };
+                if (controlsMenuSelectedItem == 1 && showControls == true && Ticks >= 10) { showControls = false; Ticks = 0; };
+                break;
             }
+
+            //only allow the selected item variable to reach set values
 
             if (controlsMenuSelectedItem <= 1) { controlsMenuSelectedItem = 1; };
             if (controlsMenuSelectedItem > 2) { controlsMenuSelectedItem = 2; };
-
         }
 
-        private void updateAboutScreen()
+        private void updateAboutScreen() //logic and input for about screen
         {
+        //return to start menu from about menu
 
-         if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; }
+        if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; }
+        } 
 
-        }
-
-        private void updateCharacterSelectScreen()
+        private void updateCharacterSelectScreen() //logic and input for select character screen
         {
-            playerOneTicks++;
-            playerTwoTicks++;
+            playerOneTicks++; //add to player one timer every update
+            playerTwoTicks++; //add to player two timer every update
 
-                switch (playerOnePressedControl)
-                {
-                    case "left":
-                        if (playerOneTicks >= 10) { playerOneCharacter--; playerOneTicks = 0; }
-                        break;
-                    case "right":
-                        if (playerOneTicks >= 10) { playerOneCharacter++; playerOneTicks = 0; }
-                        break;
-                    case "1":
-                        playerOneReady = true;
-                        break;
-                }
-
-                if (playerOneCharacter <= 1) { playerOneCharacter = 1; }
-                if (playerOneCharacter > 9) { playerOneCharacter = 9; }
-
-                switch (playerTwoPressedControl)
-                {
-                    case "left":
-                        if (playerTwoTicks >= 10) { playerTwoCharacter--; playerTwoTicks = 0; }
-                        break;
-                    case "right":
-                        if (playerTwoTicks >= 10) { playerTwoCharacter++; playerTwoTicks = 0; }
-                        break;
-                    case "1":
-                        playerTwoReady = true;
-                        break;
-                }
-
-                if (playerTwoCharacter <= 1) { playerTwoCharacter = 1; }
-                if (playerTwoCharacter > 9) { playerTwoCharacter = 9; }
-
-            if (playerOneReady == true && playerOnePressedControl == "2")
+            switch (playerOnePressedControl) //change menu item and select character for player one
             {
-                playerOneReady = false;
+            case "left": if (playerOneTicks >= 10) { playerOneCharacter--; playerOneTicks = 0; } break;
+            case "right": if (playerOneTicks >= 10) { playerOneCharacter++; playerOneTicks = 0; } break;
+            case "1": playerOneReady = true; break;
             }
 
-            if (playerTwoReady == true && playerTwoPressedControl == "2")
+            //only allow the selected item variable to go to set values
+
+            if (playerOneCharacter <= 1) { playerOneCharacter = 1; }
+            if (playerOneCharacter > 9) { playerOneCharacter = 9; }
+
+            switch (playerTwoPressedControl) //change menu item and select character for player two
             {
-                playerTwoReady = false;
+            case "left": if (playerTwoTicks >= 10) { playerTwoCharacter--; playerTwoTicks = 0; } break;
+            case "right": if (playerTwoTicks >= 10) { playerTwoCharacter++; playerTwoTicks = 0; } break;
+            case "1": playerTwoReady = true; break;
             }
 
-            Ticks++;
+            //only allow the selected item variable to go to set values
 
-            if (playerOneReady == true && playerTwoReady == true)
-            {
-                if (Ticks >= 50)
-                {
-                    activeMenu = "inGame";
-                }
-            }
+            if (playerTwoCharacter <= 1) { playerTwoCharacter = 1; }
+            if (playerTwoCharacter > 9) { playerTwoCharacter = 9; }
+
+            //allow the user to reselect a character if they change their mind
+
+            if (playerOneReady == true && playerOnePressedControl == "2") { playerOneReady = false; }
+            if (playerTwoReady == true && playerTwoPressedControl == "2") { playerTwoReady = false; }
+
+            Ticks++; //add to timer every update
+
+            //if both players have selected their character and 100 ticks have passed, drop the users into the game
+
+            if (playerOneReady == true && playerTwoReady == true) { if (Ticks >= 100) { activeMenu = "inGame"; } }
         }
 
-        private void updatePauseScreen()
+        private void updatePauseScreen() //logic and input for pause screen (TODO)
         {
         }
 
-        private void updateResetGameScreen()
+        private void updateResetGameScreen() //logic and input for reset game screen (TODO)
         {
         }
 
-        private void updateInGameScreen()
+        private void updateInGameScreen() //logic and input for in game (TODO)
         {
         }
 
-        private void drawStartScreen()
+        private void drawStartScreen() //draw textures for start screen
         {
-            //declaring rectangles to draw textures (fairly self explanatory)
+            //declare rectangles to draw textures
 
             Rectangle backgroundPosition = new Rectangle(0, 0, 1024, 768); 
             Rectangle logoPosition = new Rectangle((512 - (titleScreenLogo.Width / 4)), 48, (titleScreenLogo.Width / 2), (titleScreenLogo.Height / 2));
             Rectangle buttonPosition = new Rectangle((512 - (startGameButtonIdle.Width / 2)), (logoPosition.Y + logoPosition.Height + 32), startGameButtonIdle.Width, startGameButtonIdle.Height);           
 
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(); //begin the spritebatch
 
-            SpriteBatch.Draw(titleScreenBackground, backgroundPosition, Color.White);
+            //draw static elements
+
+            SpriteBatch.Draw(titleScreenBackground, backgroundPosition, Color.White); 
             SpriteBatch.Draw(titleScreenLogo, logoPosition, Color.White);
 
-            switch (startMenuSelectedItem) //switch case based on which menu item is selected to draw appropriate textures
+            switch (startMenuSelectedItem) //show the selected button as selected
             {
                 case 1:
                     SpriteBatch.Draw(startGameButtonSelected, new Rectangle(buttonPosition.X, buttonPosition.Y, buttonPosition.Width, startGameButtonSelected.Height), Color.White);
@@ -310,12 +289,14 @@ namespace Menus
                     break;
             }
 
-            SpriteBatch.End();
+            SpriteBatch.End(); //end the spritebatch
 
-        }
+        } 
 
-        private void drawStageSelectScreen()
+        private void drawStageSelectScreen() //draw textures for stage select screen
         {
+            //declare rectangles to draw textures
+
             Rectangle backgroundPosition = new Rectangle(0, 0, 1024, 768);
             Rectangle headerPosition = new Rectangle(0, 0, 1024, stageSelectHeader.Height);
             Rectangle logoPosition = new Rectangle((512 - (northWesternLogo.Width / 2)), (((768 + stageSelectHeader.Height) / 2) - (northWesternLogo.Height / 2)), northWesternLogo.Width, northWesternLogo.Width);
@@ -326,12 +307,14 @@ namespace Menus
             Rectangle backButtonPosition = new Rectangle(24, (768 - backButtonIdle.Height - 24), backButtonIdle.Width, backButtonIdle.Height);
             Rectangle doneButtonPosition = new Rectangle((1024 - 24 - backButtonIdle.Width), (768 - backButtonIdle.Height - 24), backButtonIdle.Width, backButtonIdle.Height);
 
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(); //begin spritebatch
+
+            //draw static elements
 
             SpriteBatch.Draw(titleScreenBackground, backgroundPosition, Color.White);
             SpriteBatch.Draw(stageSelectHeader, headerPosition, Color.White);
            
-            switch(stageSelectMenuSelectedItem)
+            switch(stageSelectMenuSelectedItem) //draw buttons and the selected stage based on uer input
             {
                 case 1:
                     {
@@ -339,14 +322,8 @@ namespace Menus
                         SpriteBatch.Draw(rightArrowIdle, leftButtonIdle, Color.White);
                         SpriteBatch.Draw(backButtonIdle, backButtonPosition, Color.White);
                         SpriteBatch.Draw(doneButtonIdle, doneButtonPosition, Color.White);
-                        if (selectedStage == 1)
-                        {
-                            SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White);
-                        }
-                        else if (selectedStage == 2)
-                        {
-                            SpriteBatch.Draw(centralLogo, logoPosition, Color.White);
-                        }
+                        if (selectedStage == 1) { SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White); }
+                        else if (selectedStage == 2) { SpriteBatch.Draw(centralLogo, logoPosition, Color.White); }
                         break;
                     }
                 case 2:
@@ -355,14 +332,8 @@ namespace Menus
                         SpriteBatch.Draw(rightArrowSelected, leftButtonSelected, Color.White);
                         SpriteBatch.Draw(backButtonIdle, backButtonPosition, Color.White);
                         SpriteBatch.Draw(doneButtonIdle, doneButtonPosition, Color.White);
-                        if (selectedStage == 1)
-                        {
-                            SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White);
-                        }
-                        else if (selectedStage == 2)
-                        {
-                            SpriteBatch.Draw(centralLogo, logoPosition, Color.White);
-                        }
+                        if (selectedStage == 1) { SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White); }
+                        else if (selectedStage == 2) { SpriteBatch.Draw(centralLogo, logoPosition, Color.White); }
                         break;
                     }
                 case 3:
@@ -371,14 +342,8 @@ namespace Menus
                         SpriteBatch.Draw(rightArrowIdle, leftButtonIdle, Color.White);
                         SpriteBatch.Draw(backButtonSelected, (new Rectangle(backButtonPosition.X, backButtonPosition.Y, backButtonIdle.Width, backButtonSelected.Height)), Color.White);
                         SpriteBatch.Draw(doneButtonIdle, doneButtonPosition, Color.White);
-                        if (selectedStage == 1)
-                        {
-                            SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White);
-                        }
-                        else if (selectedStage == 2)
-                        {
-                            SpriteBatch.Draw(centralLogo, logoPosition, Color.White);
-                        }
+                        if (selectedStage == 1) { SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White); }
+                        else if (selectedStage == 2) { SpriteBatch.Draw(centralLogo, logoPosition, Color.White); }
                         break;
                     }
                 case 4:
@@ -387,50 +352,37 @@ namespace Menus
                         SpriteBatch.Draw(rightArrowIdle, leftButtonIdle, Color.White);
                         SpriteBatch.Draw(backButtonIdle, backButtonPosition, Color.White);
                         SpriteBatch.Draw(doneButtonSelected, (new Rectangle(doneButtonPosition.X, doneButtonPosition.Y, doneButtonIdle.Width, doneButtonSelected.Height)), Color.White);
-                        if (selectedStage == 1)
-                        {
-                            SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White);
-                        }
-                        else if (selectedStage == 2)
-                        {
-                            SpriteBatch.Draw(centralLogo, logoPosition, Color.White);
-                        }
+                        if (selectedStage == 1) { SpriteBatch.Draw(northWesternLogo, logoPosition, Color.White); }
+                        else if (selectedStage == 2) { SpriteBatch.Draw(centralLogo, logoPosition, Color.White); }
                         break;
                     }
             }
 
-
-
-            SpriteBatch.End();
-
-
+            SpriteBatch.End(); //end the spritebatch
         }
 
-        private void drawControlsScreen()
+        private void drawControlsScreen() //draw textures for controls screen
         {
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(); //begin the spritebatch
+
+            //declare rectangles to draw textures
 
             Rectangle controllerIdlePosition = new Rectangle((512 - (controllerIdle.Width / 2)), (controlsHeader.Height + ((640 - controllerIdle.Height) / 2)), controllerIdle.Width, controllerIdle.Height);
             Rectangle showControlsButton = new Rectangle(((controllerIdlePosition.X + (controllerIdle.Width / 2)) - 265), (controllerIdlePosition.Y + controllerIdle.Height - (doneButtonIdle.Height / 2)), showControlsButtonIdle.Width, showControlsButtonIdle.Height);
             Rectangle doneButton = new Rectangle((showControlsButton.X + showControlsButtonIdle.Width + 32), (controllerIdlePosition.Y + controllerIdle.Height - (doneButtonIdle.Height / 2)), doneButtonIdle.Width, doneButtonIdle.Height);
 
+            //draw static textures
+
             SpriteBatch.Draw(titleScreenBackground, (new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height)), Color.White);
             SpriteBatch.Draw(controlsHeader, (new Rectangle(0, 0, controlsHeader.Width, controlsHeader.Height)), Color.White);
 
-
-            SpriteBatch.Draw(controllerIdle, controllerIdlePosition, Color.White);
-
-            switch (showControls)
+            switch (showControls) //show controls on controller based on user input
             {
-                case true:
-                    SpriteBatch.Draw(controllerSelected, (new Rectangle(controllerIdlePosition.X - 32, controllerIdlePosition.Y, controllerSelected.Width, controllerSelected.Height)), Color.White);
-                    break;
-                case false:
-                    SpriteBatch.Draw(controllerIdle, controllerIdlePosition, Color.White);
-                    break;
+                case true: SpriteBatch.Draw(controllerSelected, (new Rectangle(controllerIdlePosition.X - 32, controllerIdlePosition.Y, controllerSelected.Width, controllerSelected.Height)), Color.White); break;
+                case false: SpriteBatch.Draw(controllerIdle, controllerIdlePosition, Color.White); break;
             }
 
-            switch (controlsMenuSelectedItem)
+            switch (controlsMenuSelectedItem) //draw buttons as selected based on user input
             {
                 case 1:
                     SpriteBatch.Draw(showControlsButtonSelected, new Rectangle(showControlsButton.X, showControlsButton.Y, showControlsButtonIdle.Width, showControlsButtonSelected.Height), Color.White);
@@ -442,31 +394,45 @@ namespace Menus
                     break;
             }
 
-            SpriteBatch.End();
-
+            SpriteBatch.End(); //end the spritebatch
         }
 
-        private void drawAboutScreen()
+        private void drawAboutScreen() //draw textures for about screen
         {
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(); //begin the spritebatch
+
+            //declare rectangles to draw textures
 
             Rectangle doneButton = new Rectangle(512 - (doneButtonIdle.Width / 2), aboutHeader.Height + infoPane.Height + 88 + 32, doneButtonIdle.Width, doneButtonSelected.Height);
             Rectangle infoPanePos = new Rectangle(512 - (infoPane.Width / 2), (aboutHeader.Height + ((553 - infoPane.Height) / 2)), infoPane.Width, infoPane.Height);
+
+            //draw static textures
 
             SpriteBatch.Draw(titleScreenBackground, new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height), Color.White);
             SpriteBatch.Draw(aboutHeader, new Rectangle(0, 0, aboutHeader.Width, aboutHeader.Height), Color.White);
             SpriteBatch.Draw(infoPane, infoPanePos, Color.White);
             SpriteBatch.Draw(doneButtonSelected, doneButton, Color.White);
 
-            SpriteBatch.End();
+            SpriteBatch.End(); //end the spritebatch
         }
 
-        private void drawCharacterSelectScreen()
+        private void drawCharacterSelectScreen() //draw textures for character selection screen
         {
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(); //begin the spritebatch
+
+            //declare rectangles to draw static textures
+
+            Rectangle playerOnePane = new Rectangle(60, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
+            Rectangle playerTwoPane = new Rectangle(544, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
+
+            //draw static textures
 
             SpriteBatch.Draw(titleScreenBackground, (new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height)), Color.White);
             SpriteBatch.Draw(characterSelectHeader, (new Rectangle(0, 0, characterSelectHeader.Width, characterSelectHeader.Height)), Color.White);
+            SpriteBatch.Draw(characterSelectPane, playerOnePane, Color.White);
+            SpriteBatch.Draw(characterSelectPane, playerTwoPane, Color.White);
+
+            //delcare variables, use them to create rectangles to move the selection box
 
             int charColumnOneX = 48;
             int charColumnTwoX = 160;
@@ -479,165 +445,91 @@ namespace Menus
             int playerOneSelectedCharacterY = 164;
             int playerTwoSelectedCharacterY = 164;
 
-            switch (playerOneCharacter)
+            switch (playerOneCharacter) //set the value of the selection rectangle based on the selected item for player one
             {
-                case 1:
-                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowOneY;
-                    break;
-                case 2:
-                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowOneY;
-                    break;
-                case 3:
-                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowOneY;
-                    break;
-                case 4:
-                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowTwoY;
-                    break;
-                case 5:
-                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowTwoY;
-                    break;
-                case 6:
-                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowTwoY;
-                    break;
-                case 7:
-                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowThreeY;
-                    break;
-                case 8:
-                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowThreeY;
-                    break;
-                case 9:
-                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowThreeY;
-                    break;
+                case 1: playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowOneY; break;
+                case 2: playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowOneY; break;
+                case 3: playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowOneY; break;
+                case 4: playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowTwoY; break;
+                case 5: playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowTwoY; break;
+                case 6: playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowTwoY; break;
+                case 7: playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowThreeY; break;
+                case 8: playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowThreeY; break;
+                case 9: playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowThreeY; break;
             }
 
-            switch (playerTwoCharacter)
+            switch (playerTwoCharacter) //set the value of the selection rectangle based on the selected item for player two
             {
-                case 1:
-                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowOneY;
-                    break;
-                case 2:
-                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowOneY;
-                    break;
-                case 3:
-                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowOneY;
-                    break;
-                case 4:
-                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowTwoY;
-                    break;
-                case 5:
-                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowTwoY;
-                    break;
-                case 6:
-                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowTwoY;
-                    break;
-                case 7:
-                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowThreeY;
-                    break;
-                case 8:
-                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowThreeY;
-                    break;
-                case 9:
-                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowThreeY;
-                    break;
+                case 1: playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowOneY; break;
+                case 2: playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowOneY; break;
+                case 3: playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowOneY; break;
+                case 4: playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowTwoY; break;
+                case 5: playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowTwoY; break;
+                case 6: playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowTwoY; break;
+                case 7: playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowThreeY; break;
+                case 8: playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowThreeY; break;
+                case 9: playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowThreeY; break;
             }
 
-            Rectangle playerOnePane = new Rectangle(60, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
-            Rectangle playerTwoPane = new Rectangle(544, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
+            //declare rectangles for changing textures
 
             Rectangle playerOneSelection = new Rectangle((playerOnePane.X + playerOneSelectedCharacterX), (playerOnePane.Y + playerOneSelectedCharacterY), playerOneSelectedCharacter.Width, playerOneSelectedCharacter.Height);
             Rectangle playerTwoSelection = new Rectangle((playerTwoPane.X + playerTwoSelectedCharacterX), (playerTwoPane.Y + playerTwoSelectedCharacterY), playerTwoSelectedCharacter.Width, playerTwoSelectedCharacter.Height);
             Rectangle playerOneSelectionIcon = new Rectangle((playerOnePane.X + 168), (playerOnePane.Y + 28), characterOneIcon.Width, characterOneIcon.Height);
             Rectangle playerTwoSelectionIcon = new Rectangle((playerTwoPane.X + 168), (playerTwoPane.Y + 28), characterOneIcon.Width, characterOneIcon.Height);
 
-
-            SpriteBatch.Draw(characterSelectPane, playerOnePane, Color.White);
-            SpriteBatch.Draw(characterSelectPane, playerTwoPane, Color.White);
+            //draw character selection box
+        
             SpriteBatch.Draw(playerOneSelectedCharacter, playerOneSelection, Color.White);
             SpriteBatch.Draw(playerTwoSelectedCharacter, playerTwoSelection, Color.White);
 
-            switch (playerOneCharacter)
+            switch (playerOneCharacter) //draw character selection icon for player one
             {
-                case 1:
-                    SpriteBatch.Draw(characterOneIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 2:
-                    SpriteBatch.Draw(characterTwoIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 3:
-                    SpriteBatch.Draw(characterThreeIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 4:
-                    SpriteBatch.Draw(characterFourIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 5:
-                    SpriteBatch.Draw(characterFiveIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 6:
-                    SpriteBatch.Draw(characterSixIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 7:
-                    SpriteBatch.Draw(characterSevenIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 8:
-                    SpriteBatch.Draw(characterEightIcon, playerOneSelectionIcon, Color.White);
-                    break;
-                case 9:
-                    SpriteBatch.Draw(characterNineIcon, playerOneSelectionIcon, Color.White);
-                    break;
+                case 1: SpriteBatch.Draw(characterOneIcon, playerOneSelectionIcon, Color.White); break;
+                case 2: SpriteBatch.Draw(characterTwoIcon, playerOneSelectionIcon, Color.White); break;
+                case 3: SpriteBatch.Draw(characterThreeIcon, playerOneSelectionIcon, Color.White); break;
+                case 4: SpriteBatch.Draw(characterFourIcon, playerOneSelectionIcon, Color.White); break;
+                case 5: SpriteBatch.Draw(characterFiveIcon, playerOneSelectionIcon, Color.White); break;
+                case 6: SpriteBatch.Draw(characterSixIcon, playerOneSelectionIcon, Color.White); break;
+                case 7: SpriteBatch.Draw(characterSevenIcon, playerOneSelectionIcon, Color.White); break;
+                case 8: SpriteBatch.Draw(characterEightIcon, playerOneSelectionIcon, Color.White); break;
+                case 9: SpriteBatch.Draw(characterNineIcon, playerOneSelectionIcon, Color.White); break;
             }
 
-            switch (playerTwoCharacter)
+            switch (playerTwoCharacter) //draw character selection icon for player two
             {
-                case 1:
-                    SpriteBatch.Draw(characterOneIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 2:
-                    SpriteBatch.Draw(characterTwoIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 3:
-                    SpriteBatch.Draw(characterThreeIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 4:
-                    SpriteBatch.Draw(characterFourIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 5:
-                    SpriteBatch.Draw(characterFiveIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 6:
-                    SpriteBatch.Draw(characterSixIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 7:
-                    SpriteBatch.Draw(characterSevenIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 8:
-                    SpriteBatch.Draw(characterEightIcon, playerTwoSelectionIcon, Color.White);
-                    break;
-                case 9:
-                    SpriteBatch.Draw(characterNineIcon, playerTwoSelectionIcon, Color.White);
-                    break;
+                case 1: SpriteBatch.Draw(characterOneIcon, playerTwoSelectionIcon, Color.White); break;
+                case 2: SpriteBatch.Draw(characterTwoIcon, playerTwoSelectionIcon, Color.White); break;
+                case 3: SpriteBatch.Draw(characterThreeIcon, playerTwoSelectionIcon, Color.White); break;
+                case 4: SpriteBatch.Draw(characterFourIcon, playerTwoSelectionIcon, Color.White); break;
+                case 5: SpriteBatch.Draw(characterFiveIcon, playerTwoSelectionIcon, Color.White); break;
+                case 6: SpriteBatch.Draw(characterSixIcon, playerTwoSelectionIcon, Color.White); break;
+                case 7: SpriteBatch.Draw(characterSevenIcon, playerTwoSelectionIcon, Color.White); break;
+                case 8: SpriteBatch.Draw(characterEightIcon, playerTwoSelectionIcon, Color.White); break;
+                case 9: SpriteBatch.Draw(characterNineIcon, playerTwoSelectionIcon, Color.White); break;
             }
 
-            SpriteBatch.End();
+            SpriteBatch.End(); //end the spritebatch
         }
 
-        private void drawPauseScreen()
+        private void drawPauseScreen() //draw textures for pause screen (TODO)
         {
         }
 
-        private void drawResetGameScreen()
+        private void drawResetGameScreen() //draw textures for rest game screen (TODO)
         {
         }
 
-        private void drawInGameScreen()
+        private void drawInGameScreen() //draw textures for in game (TODO)
         {
         }
 
-
-
-        public Game1()
+        public Game1() //start the game
         {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            graphics = new GraphicsDeviceManager(this); //start the graphics engine
+            Content.RootDirectory = "Content"; //set the directory for music and textures
+
+            //set the resolution
 
             this.graphics.PreferredBackBufferWidth = 1024;
             this.graphics.PreferredBackBufferHeight = 768;
@@ -650,7 +542,9 @@ namespace Menus
 
         protected override void LoadContent()
         {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice); //declare the spritebatch
+
+            //load all resources
 
             titleScreenBackground = Content.Load<Texture2D>("TitleScreenBackground");
             titleScreenLogo = Content.Load<Texture2D>("TitleScreenLogo");
@@ -697,8 +591,7 @@ namespace Menus
             showControlsButtonSelected = Content.Load<Texture2D>("showControlsButtonSelected");
             infoPane = Content.Load<Texture2D>("infoPane");
 
-
-            activeMenu = "start";
+            activeMenu = "start"; //start the game on the start menu
         }
 
         protected override void UnloadContent()
@@ -706,40 +599,25 @@ namespace Menus
             // TODO: Unload any non ContentManager content here
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime) //global updates, keeps track of input and selected menu
         {
+            //keep track of gamepad input
+
             GamePadState playerOneState = GamePad.GetState(PlayerIndex.One);
             GamePadState playerTwoState = GamePad.GetState(PlayerIndex.Two);
 
-            globalTicks++;
+            globalTicks++; //add to the timer every update (use this for timers that need to be maintained between menus)
 
-
-            switch (activeMenu)
+            switch (activeMenu) //switch what menu logic is used based on the selected menu
             {
-                case "start":
-                    updateStartScreen();
-                    break;
-                case "stageSelect":
-                    updateStageSelectScreen();
-                    break;
-                case "controls":
-                    updateControlsScreen();
-                    break;
-                case "about":
-                    updateAboutScreen();
-                    break;
-                case "characterSelect":
-                    updateCharacterSelectScreen();
-                    break;
-                case "pause":
-                    updatePauseScreen();
-                    break;
-                case "resetGame":
-                    updateResetGameScreen();
-                    break;
-                case "inGame":
-                    updateInGameScreen();
-                    break;
+                case "start": updateStartScreen(); break;
+                case "stageSelect": updateStageSelectScreen(); break;
+                case "controls": updateControlsScreen(); break;
+                case "about": updateAboutScreen(); break;
+                case "characterSelect": updateCharacterSelectScreen(); break;
+                case "pause": updatePauseScreen(); break;
+                case "resetGame": updateResetGameScreen(); break;
+                case "inGame": updateInGameScreen(); break;
             }
 
             //player one input
@@ -830,39 +708,23 @@ namespace Menus
 
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime gameTime) //draw the selected state
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.White); //set the background color
 
-            switch (activeMenu)
+            switch (activeMenu) //draw the selected state
             {
-                case "start":
-                    drawStartScreen();
-                    break;
-                case "stageSelect":
-                    drawStageSelectScreen();
-                    break;
-                case "controls":
-                    drawControlsScreen();
-                    break;
-                case "about":
-                    drawAboutScreen();
-                    break;
-                case "characterSelect":
-                    drawCharacterSelectScreen();
-                    break;
-                case "pause":
-                    drawPauseScreen();
-                    break;
-                case "resetGame":
-                    drawResetGameScreen();
-                    break;
-                case "inGame":
-                    drawInGameScreen();
-                    break;
+                case "start": drawStartScreen(); break;
+                case "stageSelect": drawStageSelectScreen(); break;
+                case "controls": drawControlsScreen(); break;
+                case "about": drawAboutScreen(); break;
+                case "characterSelect": drawCharacterSelectScreen(); break;
+                case "pause": drawPauseScreen(); break;
+                case "resetGame": drawResetGameScreen(); break;
+                case "inGame": drawInGameScreen(); break;
             }
 
-            base.Draw(gameTime);
+            base.Draw(gameTime); //draw every tick
         }
     }
 }
