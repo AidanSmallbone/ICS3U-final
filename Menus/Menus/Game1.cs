@@ -38,11 +38,38 @@ namespace Menus
         Texture2D backButtonSelected;
         Texture2D doneButtonIdle;
         Texture2D doneButtonSelected;
+        Texture2D characterSelectHeader;
+        Texture2D characterSelectPane;
+        Texture2D characterOneIcon;
+        Texture2D characterTwoIcon;
+        Texture2D characterThreeIcon;
+        Texture2D characterFourIcon;
+        Texture2D characterFiveIcon;
+        Texture2D characterSixIcon;
+        Texture2D characterSevenIcon;
+        Texture2D characterEightIcon;
+        Texture2D characterNineIcon;
+        Texture2D playerOneSelectedCharacter;
+        Texture2D playerTwoSelectedCharacter;
+        Texture2D controllerIdle;
+        Texture2D dPadControls;
+        Texture2D buttonControls;
+        Texture2D startControls;
+        Texture2D controlsHeader;
+        Texture2D aboutHeader;
+        Texture2D controllerSelected;
+        Texture2D showControlsButtonIdle;
+        Texture2D showControlsButtonSelected;
+        Texture2D infoPane;
+
 
         string activeMenu;
         string playerOnePressedControl = "blank"; //1, 2, 3, 4, up, down, left, right, start, blank (Player One input)
         string playerTwoPressedControl = "blank"; //1, 2, 3, 4, up, down, left, right, start, blank (Player Two input)
         int Ticks = 0;
+        int playerOneTicks = 0;
+        int playerTwoTicks = 0;
+        int globalTicks = 0;
 
         int startMenuSelectedItem = 1;
         int stageSelectMenuSelectedItem = 1;
@@ -55,7 +82,10 @@ namespace Menus
         int selectedStage = 1;
         int playerOneCharacter = 1;
         int playerTwoCharacter = 1;
-  
+        bool playerOneReady = false;
+        bool playerTwoReady = false;
+        bool showControls = false;
+
         private void updateStartScreen()
         {
             Ticks++;
@@ -76,16 +106,19 @@ namespace Menus
             switch (startMenuSelectedItem)
             {
                 case 1:
-                    if (playerOnePressedControl == "start") { activeMenu = "stageSelect"; }
+                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; }
                     break;
                 case 2:
-                    if (playerOnePressedControl == "start") { activeMenu = "controls"; }
+                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "controls"; globalTicks = 0; }
                     break;
                 case 3:
-                    if (playerOnePressedControl == "start") { activeMenu = "about"; }
+                    if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "about"; globalTicks = 0; }
                     break;
                 case 4:
-                    if (playerOnePressedControl == "start") { activeMenu = "quitGame"; }
+                    if (playerOnePressedControl == "1") { this.Exit(); }
+                    break;
+                case 5:
+                    if (playerOnePressedControl == "start" && globalTicks >= 20) { activeMenu = "stageSelect"; globalTicks = 0; }
                     break;
             }
         }
@@ -124,7 +157,7 @@ namespace Menus
                     }
                 case 3:
                     {
-                        if (playerOnePressedControl == "1") { activeMenu = "start"; }
+                        if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; }
                         break;
                     }
                 case 4:
@@ -135,20 +168,93 @@ namespace Menus
             }
         }
 
-        private void updateQuitGameScreen()
-        {
-        }
-
         private void updateControlsScreen()
         {
+            Ticks++;
+
+            switch (playerOnePressedControl)
+            {
+                case "left":
+                    if (Ticks >= 10) { controlsMenuSelectedItem--; Ticks = 0; }
+                    break;
+                case "right":
+                    if (Ticks >= 10) { controlsMenuSelectedItem++; Ticks = 0; }
+                    break;
+                case "1":
+                    if (controlsMenuSelectedItem == 2 && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; };
+                    if (controlsMenuSelectedItem == 1 && showControls == false && Ticks >= 10) { showControls = true; Ticks = 0; };
+                    if (controlsMenuSelectedItem == 1 && showControls == true && Ticks >= 10) { showControls = false; Ticks = 0; };
+                    break;
+            }
+
+            if (controlsMenuSelectedItem <= 1) { controlsMenuSelectedItem = 1; };
+            if (controlsMenuSelectedItem > 2) { controlsMenuSelectedItem = 2; };
+
         }
 
         private void updateAboutScreen()
         {
+
+         if (playerOnePressedControl == "1" && globalTicks >= 20) { activeMenu = "start"; globalTicks = 0; }
+
         }
 
         private void updateCharacterSelectScreen()
         {
+            playerOneTicks++;
+            playerTwoTicks++;
+
+                switch (playerOnePressedControl)
+                {
+                    case "left":
+                        if (playerOneTicks >= 10) { playerOneCharacter--; playerOneTicks = 0; }
+                        break;
+                    case "right":
+                        if (playerOneTicks >= 10) { playerOneCharacter++; playerOneTicks = 0; }
+                        break;
+                    case "1":
+                        playerOneReady = true;
+                        break;
+                }
+
+                if (playerOneCharacter <= 1) { playerOneCharacter = 1; }
+                if (playerOneCharacter > 9) { playerOneCharacter = 9; }
+
+                switch (playerTwoPressedControl)
+                {
+                    case "left":
+                        if (playerTwoTicks >= 10) { playerTwoCharacter--; playerTwoTicks = 0; }
+                        break;
+                    case "right":
+                        if (playerTwoTicks >= 10) { playerTwoCharacter++; playerTwoTicks = 0; }
+                        break;
+                    case "1":
+                        playerTwoReady = true;
+                        break;
+                }
+
+                if (playerTwoCharacter <= 1) { playerTwoCharacter = 1; }
+                if (playerTwoCharacter > 9) { playerTwoCharacter = 9; }
+
+            if (playerOneReady == true && playerOnePressedControl == "2")
+            {
+                playerOneReady = false;
+            }
+
+            if (playerTwoReady == true && playerTwoPressedControl == "2")
+            {
+                playerTwoReady = false;
+            }
+
+            Ticks++;
+
+            if (playerOneReady == true && playerTwoReady == true)
+            {
+                if (Ticks >= 50)
+                {
+                    activeMenu = "inGame";
+                }
+            }
         }
 
         private void updatePauseScreen()
@@ -156,6 +262,10 @@ namespace Menus
         }
 
         private void updateResetGameScreen()
+        {
+        }
+
+        private void updateInGameScreen()
         {
         }
 
@@ -296,20 +406,218 @@ namespace Menus
 
         }
 
-        private void drawQuitGameScreen()
-        {
-        }
-
         private void drawControlsScreen()
         {
+            SpriteBatch.Begin();
+
+            Rectangle controllerIdlePosition = new Rectangle((512 - (controllerIdle.Width / 2)), (controlsHeader.Height + ((640 - controllerIdle.Height) / 2)), controllerIdle.Width, controllerIdle.Height);
+            Rectangle showControlsButton = new Rectangle(((controllerIdlePosition.X + (controllerIdle.Width / 2)) - 265), (controllerIdlePosition.Y + controllerIdle.Height - (doneButtonIdle.Height / 2)), showControlsButtonIdle.Width, showControlsButtonIdle.Height);
+            Rectangle doneButton = new Rectangle((showControlsButton.X + showControlsButtonIdle.Width + 32), (controllerIdlePosition.Y + controllerIdle.Height - (doneButtonIdle.Height / 2)), doneButtonIdle.Width, doneButtonIdle.Height);
+
+            SpriteBatch.Draw(titleScreenBackground, (new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height)), Color.White);
+            SpriteBatch.Draw(controlsHeader, (new Rectangle(0, 0, controlsHeader.Width, controlsHeader.Height)), Color.White);
+
+
+            SpriteBatch.Draw(controllerIdle, controllerIdlePosition, Color.White);
+
+            switch (showControls)
+            {
+                case true:
+                    SpriteBatch.Draw(controllerSelected, (new Rectangle(controllerIdlePosition.X - 32, controllerIdlePosition.Y, controllerSelected.Width, controllerSelected.Height)), Color.White);
+                    break;
+                case false:
+                    SpriteBatch.Draw(controllerIdle, controllerIdlePosition, Color.White);
+                    break;
+            }
+
+            switch (controlsMenuSelectedItem)
+            {
+                case 1:
+                    SpriteBatch.Draw(showControlsButtonSelected, new Rectangle(showControlsButton.X, showControlsButton.Y, showControlsButtonIdle.Width, showControlsButtonSelected.Height), Color.White);
+                    SpriteBatch.Draw(doneButtonIdle, doneButton, Color.White);
+                    break;
+                case 2:
+                    SpriteBatch.Draw(showControlsButtonIdle, showControlsButton, Color.White);
+                    SpriteBatch.Draw(doneButtonSelected, new Rectangle(doneButton.X, doneButton.Y, doneButtonIdle.Width, doneButtonSelected.Height), Color.White);
+                    break;
+            }
+
+            SpriteBatch.End();
+
         }
 
         private void drawAboutScreen()
         {
+            SpriteBatch.Begin();
+
+            Rectangle doneButton = new Rectangle(512 - (doneButtonIdle.Width / 2), aboutHeader.Height + infoPane.Height + 88 + 32, doneButtonIdle.Width, doneButtonSelected.Height);
+            Rectangle infoPanePos = new Rectangle(512 - (infoPane.Width / 2), (aboutHeader.Height + ((553 - infoPane.Height) / 2)), infoPane.Width, infoPane.Height);
+
+            SpriteBatch.Draw(titleScreenBackground, new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height), Color.White);
+            SpriteBatch.Draw(aboutHeader, new Rectangle(0, 0, aboutHeader.Width, aboutHeader.Height), Color.White);
+            SpriteBatch.Draw(infoPane, infoPanePos, Color.White);
+            SpriteBatch.Draw(doneButtonSelected, doneButton, Color.White);
+
+            SpriteBatch.End();
         }
 
         private void drawCharacterSelectScreen()
         {
+            SpriteBatch.Begin();
+
+            SpriteBatch.Draw(titleScreenBackground, (new Rectangle(0, 0, titleScreenBackground.Width, titleScreenBackground.Height)), Color.White);
+            SpriteBatch.Draw(characterSelectHeader, (new Rectangle(0, 0, characterSelectHeader.Width, characterSelectHeader.Height)), Color.White);
+
+            int charColumnOneX = 48;
+            int charColumnTwoX = 160;
+            int charColumnThreeX = 272;
+            int charRowOneY = 164;
+            int charRowTwoY = 276;
+            int charRowThreeY = 388;
+            int playerOneSelectedCharacterX = 48;
+            int playerTwoSelectedCharacterX = 48;
+            int playerOneSelectedCharacterY = 164;
+            int playerTwoSelectedCharacterY = 164;
+
+            switch (playerOneCharacter)
+            {
+                case 1:
+                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowOneY;
+                    break;
+                case 2:
+                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowOneY;
+                    break;
+                case 3:
+                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowOneY;
+                    break;
+                case 4:
+                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowTwoY;
+                    break;
+                case 5:
+                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowTwoY;
+                    break;
+                case 6:
+                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowTwoY;
+                    break;
+                case 7:
+                    playerOneSelectedCharacterX = charColumnOneX; playerOneSelectedCharacterY = charRowThreeY;
+                    break;
+                case 8:
+                    playerOneSelectedCharacterX = charColumnTwoX; playerOneSelectedCharacterY = charRowThreeY;
+                    break;
+                case 9:
+                    playerOneSelectedCharacterX = charColumnThreeX; playerOneSelectedCharacterY = charRowThreeY;
+                    break;
+            }
+
+            switch (playerTwoCharacter)
+            {
+                case 1:
+                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowOneY;
+                    break;
+                case 2:
+                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowOneY;
+                    break;
+                case 3:
+                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowOneY;
+                    break;
+                case 4:
+                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowTwoY;
+                    break;
+                case 5:
+                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowTwoY;
+                    break;
+                case 6:
+                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowTwoY;
+                    break;
+                case 7:
+                    playerTwoSelectedCharacterX = charColumnOneX; playerTwoSelectedCharacterY = charRowThreeY;
+                    break;
+                case 8:
+                    playerTwoSelectedCharacterX = charColumnTwoX; playerTwoSelectedCharacterY = charRowThreeY;
+                    break;
+                case 9:
+                    playerTwoSelectedCharacterX = charColumnThreeX; playerTwoSelectedCharacterY = charRowThreeY;
+                    break;
+            }
+
+            Rectangle playerOnePane = new Rectangle(60, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
+            Rectangle playerTwoPane = new Rectangle(544, ((((titleScreenBackground.Height - characterSelectHeader.Height) - characterSelectPane.Height) / 2) + characterSelectHeader.Height), characterSelectPane.Width, characterSelectPane.Height);
+
+            Rectangle playerOneSelection = new Rectangle((playerOnePane.X + playerOneSelectedCharacterX), (playerOnePane.Y + playerOneSelectedCharacterY), playerOneSelectedCharacter.Width, playerOneSelectedCharacter.Height);
+            Rectangle playerTwoSelection = new Rectangle((playerTwoPane.X + playerTwoSelectedCharacterX), (playerTwoPane.Y + playerTwoSelectedCharacterY), playerTwoSelectedCharacter.Width, playerTwoSelectedCharacter.Height);
+            Rectangle playerOneSelectionIcon = new Rectangle((playerOnePane.X + 168), (playerOnePane.Y + 28), characterOneIcon.Width, characterOneIcon.Height);
+            Rectangle playerTwoSelectionIcon = new Rectangle((playerTwoPane.X + 168), (playerTwoPane.Y + 28), characterOneIcon.Width, characterOneIcon.Height);
+
+
+            SpriteBatch.Draw(characterSelectPane, playerOnePane, Color.White);
+            SpriteBatch.Draw(characterSelectPane, playerTwoPane, Color.White);
+            SpriteBatch.Draw(playerOneSelectedCharacter, playerOneSelection, Color.White);
+            SpriteBatch.Draw(playerTwoSelectedCharacter, playerTwoSelection, Color.White);
+
+            switch (playerOneCharacter)
+            {
+                case 1:
+                    SpriteBatch.Draw(characterOneIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 2:
+                    SpriteBatch.Draw(characterTwoIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 3:
+                    SpriteBatch.Draw(characterThreeIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 4:
+                    SpriteBatch.Draw(characterFourIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 5:
+                    SpriteBatch.Draw(characterFiveIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 6:
+                    SpriteBatch.Draw(characterSixIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 7:
+                    SpriteBatch.Draw(characterSevenIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 8:
+                    SpriteBatch.Draw(characterEightIcon, playerOneSelectionIcon, Color.White);
+                    break;
+                case 9:
+                    SpriteBatch.Draw(characterNineIcon, playerOneSelectionIcon, Color.White);
+                    break;
+            }
+
+            switch (playerTwoCharacter)
+            {
+                case 1:
+                    SpriteBatch.Draw(characterOneIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 2:
+                    SpriteBatch.Draw(characterTwoIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 3:
+                    SpriteBatch.Draw(characterThreeIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 4:
+                    SpriteBatch.Draw(characterFourIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 5:
+                    SpriteBatch.Draw(characterFiveIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 6:
+                    SpriteBatch.Draw(characterSixIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 7:
+                    SpriteBatch.Draw(characterSevenIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 8:
+                    SpriteBatch.Draw(characterEightIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+                case 9:
+                    SpriteBatch.Draw(characterNineIcon, playerTwoSelectionIcon, Color.White);
+                    break;
+            }
+
+            SpriteBatch.End();
         }
 
         private void drawPauseScreen()
@@ -317,6 +625,10 @@ namespace Menus
         }
 
         private void drawResetGameScreen()
+        {
+        }
+
+        private void drawInGameScreen()
         {
         }
 
@@ -361,6 +673,30 @@ namespace Menus
             backButtonSelected = Content.Load<Texture2D>("backButtonSelected");
             doneButtonIdle = Content.Load<Texture2D>("doneButtonIdle");
             doneButtonSelected = Content.Load<Texture2D>("doneButtonSelected");
+            characterSelectHeader = Content.Load<Texture2D>("characterSelectHeader");
+            characterSelectPane = Content.Load<Texture2D>("characterSelectPane");
+            characterOneIcon = Content.Load<Texture2D>("char1");
+            characterTwoIcon = Content.Load<Texture2D>("char2");
+            characterThreeIcon = Content.Load<Texture2D>("char3");
+            characterFourIcon = Content.Load<Texture2D>("char4");
+            characterFiveIcon = Content.Load<Texture2D>("char5");
+            characterSixIcon = Content.Load<Texture2D>("char6");
+            characterSevenIcon = Content.Load<Texture2D>("char7");
+            characterEightIcon = Content.Load<Texture2D>("char8");
+            characterNineIcon = Content.Load<Texture2D>("char9");
+            playerOneSelectedCharacter = Content.Load<Texture2D>("playerOneSelectedCharacter");
+            playerTwoSelectedCharacter = Content.Load<Texture2D>("playerTwoSelectedCharacter");
+            aboutHeader = Content.Load<Texture2D>("aboutHeader");
+            controlsHeader = Content.Load<Texture2D>("controlsHeader");
+            buttonControls = Content.Load<Texture2D>("buttonControls");
+            dPadControls = Content.Load<Texture2D>("dPadControls");
+            startControls = Content.Load<Texture2D>("startControl");
+            controllerIdle = Content.Load<Texture2D>("controllerIdle");
+            controllerSelected = Content.Load<Texture2D>("controllerSelected");
+            showControlsButtonIdle = Content.Load<Texture2D>("showControlsButtonIdle");
+            showControlsButtonSelected = Content.Load<Texture2D>("showControlsButtonSelected");
+            infoPane = Content.Load<Texture2D>("infoPane");
+
 
             activeMenu = "start";
         }
@@ -372,6 +708,12 @@ namespace Menus
 
         protected override void Update(GameTime gameTime)
         {
+            GamePadState playerOneState = GamePad.GetState(PlayerIndex.One);
+            GamePadState playerTwoState = GamePad.GetState(PlayerIndex.Two);
+
+            globalTicks++;
+
+
             switch (activeMenu)
             {
                 case "start":
@@ -379,9 +721,6 @@ namespace Menus
                     break;
                 case "stageSelect":
                     updateStageSelectScreen();
-                    break;
-                case "quitGame":
-                    updateQuitGameScreen();
                     break;
                 case "controls":
                     updateControlsScreen();
@@ -398,43 +737,46 @@ namespace Menus
                 case "resetGame":
                     updateResetGameScreen();
                     break;
+                case "inGame":
+                    updateInGameScreen();
+                    break;
             }
 
             //player one input
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W) == true) //up
+            if (playerOneState.DPad.Up == ButtonState.Pressed) //up
             {
                 playerOnePressedControl = "up";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.A) == true) //left
+            else if (playerOneState.DPad.Left == ButtonState.Pressed) //left
             {
                 playerOnePressedControl = "left";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S) == true) //down
+            else if (playerOneState.DPad.Down == ButtonState.Pressed) //down
             {
                 playerOnePressedControl = "down";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D) == true) //right
+            else if (playerOneState.DPad.Right == ButtonState.Pressed) //right
             {
                 playerOnePressedControl = "right";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Z) == true) //1
+            else if (playerOneState.Buttons.A == ButtonState.Pressed) //1
             {
                 playerOnePressedControl = "1";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.X) == true) //2
+            else if (playerOneState.Buttons.B == ButtonState.Pressed) //2
             {
                 playerOnePressedControl = "2";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.C) == true) //3
+            else if (playerOneState.Buttons.X == ButtonState.Pressed) //3
             {
                 playerOnePressedControl = "3";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.V) == true) //4
+            else if (playerOneState.Buttons.Y == ButtonState.Pressed) //4
             {
                 playerOnePressedControl = "4";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Enter) == true) //start
+            else if (playerOneState.Buttons.Start == ButtonState.Pressed) //start
             {
                 playerOnePressedControl = "start";
             }
@@ -445,39 +787,39 @@ namespace Menus
 
             //player two input
 
-            if (Keyboard.GetState().IsKeyDown(Keys.I) == true) //up
+            if (playerTwoState.DPad.Up == ButtonState.Pressed) //up
             {
                 playerTwoPressedControl = "up";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.J) == true) //left
+            else if (playerTwoState.DPad.Left == ButtonState.Pressed) //left
             {
                 playerTwoPressedControl = "left";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.K) == true) //down
+            else if (playerTwoState.DPad.Down == ButtonState.Pressed) //down
             {
                 playerTwoPressedControl = "down";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.L) == true) //right
+            else if (playerTwoState.DPad.Right == ButtonState.Pressed) //right
             {
                 playerTwoPressedControl = "right";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.N) == true) //1
+            else if (playerTwoState.Buttons.A == ButtonState.Pressed) //1
             {
                 playerTwoPressedControl = "1";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.M) == true) //2
+            else if (playerTwoState.Buttons.B == ButtonState.Pressed) //2
             {
                 playerTwoPressedControl = "2";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.OemComma) == true) //3
+            else if (playerTwoState.Buttons.X == ButtonState.Pressed) //3
             {
                 playerTwoPressedControl = "3";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.OemPeriod) == true) //4
+            else if (playerTwoState.Buttons.Y == ButtonState.Pressed) //4
             {
                 playerTwoPressedControl = "4";
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.RightShift) == true) //start
+            else if (playerTwoState.Buttons.Start == ButtonState.Pressed) //start
             {
                 playerTwoPressedControl = "start";
             }
@@ -485,6 +827,7 @@ namespace Menus
             {
                 playerTwoPressedControl = "blank";
             }
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -498,9 +841,6 @@ namespace Menus
                     break;
                 case "stageSelect":
                     drawStageSelectScreen();
-                    break;
-                case "quitGame":
-                    drawQuitGameScreen();
                     break;
                 case "controls":
                     drawControlsScreen();
@@ -516,6 +856,9 @@ namespace Menus
                     break;
                 case "resetGame":
                     drawResetGameScreen();
+                    break;
+                case "inGame":
+                    drawInGameScreen();
                     break;
             }
 
