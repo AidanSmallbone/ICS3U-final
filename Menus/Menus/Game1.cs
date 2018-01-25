@@ -43,6 +43,7 @@ namespace Menus
         Texture2D controlsHeader;
         Texture2D aboutHeader;
         Texture2D characterSelectHeader;
+        Texture2D inGameHeader;
 
         //logo textures
 
@@ -53,6 +54,8 @@ namespace Menus
         //background textures
 
         Texture2D titleScreenBackground;
+        Texture2D centralStageBackground;
+        Texture2D northwesternStageBackground;
 
         //character icon textures
 
@@ -78,6 +81,32 @@ namespace Menus
         Texture2D infoPane;
         Texture2D characterSelectPane;
 
+        //ingame textures
+
+        Texture2D healthPoint;
+        Texture2D specialPoint;
+
+        //character animation textures
+
+        Texture2D idleAnimation;
+        Texture2D walkAnimation;
+        Texture2D jumpAnimation;
+        Texture2D punchAnimation;
+        Texture2D hPunchAnimation;
+        Texture2D kickAnimation;
+        Texture2D hKickAnimation;
+        Texture2D hitAnimation;
+        Texture2D koAnimation;
+        Texture2D winAnimation;
+        Texture2D crouchAnimation;
+        Texture2D crouchHitAnimation;
+
+
+        //declare sounds
+
+        private SoundEffect menuClick;
+        private SoundEffect menuBeep;
+
         //variable to keep track of which menu is selected
 
         string activeMenu;
@@ -93,6 +122,7 @@ namespace Menus
         int playerOneTicks = 0;
         int playerTwoTicks = 0;
         int globalTicks = 0;
+        int soundTicks = 0;
 
         //variables to keep track of the selected item on menus
 
@@ -112,6 +142,65 @@ namespace Menus
         int playerTwoCharacter = 1;
         bool playerOneReady = false;
         bool playerTwoReady = false;
+
+        //varibles to keep track of ingame stats
+
+        int playerOneHealth = 100;
+        int playerTwoHealth = 100;
+        int playerOneSpecial = 0;
+        int playerTwoSpecial = 0;
+
+        //variables to keep track of time for animations for player one
+
+        int idleFrames = 4;
+        int walkFrames = 5;
+        int jumpFrames = 6;
+        int punchFrames = 3;
+        int hPunchFrames = 5;
+        int kickFrames = 3;
+        int hKickFrames = 5;
+        int hitFrames = 4;
+        int koFrames = 5;
+        int winFrames = 3;
+        int crouchFrames = 2;
+        int crouchHitFrames = 2;
+
+        int idleCounter = 0;
+        int walkCounter = 0;
+        int jumpCounter = 0;
+        int punchCounter = 0;
+        int hPunchCounter = 0;
+        int kickCounter = 0;
+        int hKickCounter = 0;
+        int hitCounter = 0;
+        int koCounter = 0;
+        int winCounter = 0;
+        int crouchCounter = 0;
+        int crouchHitCounter = 0;
+
+        int frameDelay = 4;
+        int frameCounter = 0;
+
+        int frameCounterTwo;
+
+        int playerOneX = 0;
+
+        //variables to keep track of animations for player two
+
+        int idleCounterPlayerTwo = 0;
+        int walkCounterPlayerTwo = 0;
+        int jumpCounterPlayerTwo = 0;
+        int punchCounterPlayerTwo = 0;
+        int hPunchCounterPlayerTwo = 0;
+        int kickCounterPlayerTwo = 0;
+        int hKickCounterPlayerTwo = 0;
+        int hitCounterPlayerTwo = 0;
+        int koCounterPlayerTwo = 0;
+        int winCounterPlayerTwo = 0;
+        int crouchCounterPlayerTwo = 0;
+        int crouchHitCounterPlayerTwo = 0;
+
+        int playerTwoX = 1024 - 400;
 
         private void updateStartScreen() //logic and input for start screen
         {
@@ -232,6 +321,8 @@ namespace Menus
             //if both players have selected their character and 100 ticks have passed, drop the users into the game
 
             if (playerOneReady == true && playerTwoReady == true) { if (Ticks >= 100) { activeMenu = "inGame"; } }
+
+            if (playerOnePressedControl == "start") { activeMenu = "inGame"; } //THIS IS DEBUG CODE DELETE BEFORE FINISHED VERSION
         }
 
         private void updatePauseScreen() //logic and input for pause screen (TODO)
@@ -244,6 +335,169 @@ namespace Menus
 
         private void updateInGameScreen() //logic and input for in game (TODO)
         {
+            if (frameCounter > frameDelay)
+            {
+
+                frameCounter = 0;
+            }
+            else
+            {
+                frameCounter++;
+            }
+
+            if (frameCounterTwo > frameDelay)
+            {
+
+                frameCounterTwo = 0;
+            }
+            else
+            {
+                frameCounterTwo++;
+            }
+
+            switch (playerOnePressedControl)
+            {
+                case "up":
+                    if (jumpCounter <= jumpFrames && frameCounter == frameDelay)
+                    { jumpCounter++; }
+                    if (jumpCounter >= jumpFrames)
+                    { jumpCounter = 0; }
+                    break;
+                case "down":
+                    if (crouchCounter <= crouchFrames && frameCounter == frameDelay)
+                    { crouchCounter++; }
+                    if (crouchCounter == 2)
+                    {
+                        crouchCounter = 1;
+                    }
+                    if (crouchCounter >= crouchFrames && playerOnePressedControl == "blank" )
+                    { crouchCounter = 0; }
+                    break;
+                case "left":
+                    if (walkCounter <= walkFrames && frameCounter == frameDelay)
+                    { walkCounter++; }
+                    if (walkCounter >= walkFrames)
+                    { walkCounter = 0; }
+                    playerOneX = playerOneX - 4;
+                    if (playerOneX <= 0)
+                    {
+                        playerOneX = 0;
+                    }
+                    break;
+                case "right":
+                    if (walkCounter <= walkFrames && frameCounter == frameDelay)
+                    { walkCounter++; }
+                    if (walkCounter >= walkFrames)
+                    { walkCounter = 0; }
+                    playerOneX = playerOneX + 4;
+                    if (playerOneX >= 1024)
+                    {
+                        playerOneX = 1024;
+                    }
+                    break;
+                case "1":
+                    if (punchCounter <= punchFrames && frameCounter == frameDelay)
+                    { punchCounter++; }
+                    if (punchCounter >= punchFrames)
+                    { punchCounter = 0; }
+                    break;
+                case "2":
+                    if (hPunchCounter <= hPunchFrames && frameCounter == frameDelay)
+                    { hPunchCounter++; }
+                    if (hPunchCounter >= hPunchFrames)
+                    { hPunchCounter = 0; }
+                    break;
+                case "3":
+                    if (kickCounter <= kickFrames && frameCounter == frameDelay)
+                    { kickCounter++; }
+                    if (kickCounter >= kickFrames)
+                    { kickCounter = 0; }
+                    break;
+                case "4":
+                    if (hKickCounter <= hKickFrames && frameCounter == frameDelay)
+                    { hKickCounter++; }
+                    if (hKickCounter >= hKickFrames)
+                    { hKickCounter = 0; }
+                    break;
+                case "blank":
+                    if (idleCounter <= idleFrames && frameCounter == frameDelay)
+                    { idleCounter++; }
+                    if (idleCounter >= idleFrames)
+                    { idleCounter = 0; }
+                    break;
+            }
+
+            switch (playerTwoPressedControl)
+            {
+                case "up":
+                    if (jumpCounterPlayerTwo <= jumpFrames && frameCounterTwo == frameDelay)
+                    { jumpCounterPlayerTwo++; }
+                    if (jumpCounterPlayerTwo >= jumpFrames)
+                    { jumpCounterPlayerTwo = 0; }
+                    break;
+                case "down":
+                    if (crouchCounterPlayerTwo <= crouchFrames && frameCounterTwo == frameDelay)
+                    { crouchCounterPlayerTwo++; }
+                    if (crouchCounterPlayerTwo == 2)
+                    {
+                        crouchCounterPlayerTwo = 1;
+                    }
+                    if (crouchCounterPlayerTwo >= crouchFrames && playerTwoPressedControl == "blank")
+                    { crouchCounterPlayerTwo = 0; }
+                    break;
+                case "left":
+                    if (walkCounterPlayerTwo <= walkFrames && frameCounterTwo == frameDelay)
+                    { walkCounterPlayerTwo++; }
+                    if (walkCounterPlayerTwo >= walkFrames)
+                    { walkCounterPlayerTwo = 0; }
+                    playerTwoX = playerTwoX - 4;
+                    if (playerTwoX <= 0)
+                    {
+                        playerTwoX = 0;
+                    }
+                    break;
+                case "right":
+                    if (walkCounterPlayerTwo <= walkFrames && frameCounterTwo == frameDelay)
+                    { walkCounterPlayerTwo++; }
+                    if (walkCounterPlayerTwo >= walkFrames)
+                    { walkCounterPlayerTwo = 0; }
+                    playerTwoX = playerTwoX + 4;
+                    if (playerTwoX >= 1024)
+                    {
+                        playerTwoX = 1024;
+                    }
+                    break;
+                case "1":
+                    if (punchCounterPlayerTwo <= punchFrames && frameCounterTwo == frameDelay)
+                    { punchCounterPlayerTwo++; }
+                    if (punchCounterPlayerTwo >= punchFrames)
+                    { punchCounterPlayerTwo = 0; }
+                    break;
+                case "2":
+                    if (hPunchCounterPlayerTwo <= hPunchFrames && frameCounterTwo == frameDelay)
+                    { hPunchCounterPlayerTwo++; }
+                    if (hPunchCounterPlayerTwo >= hPunchFrames)
+                    { hPunchCounterPlayerTwo = 0; }
+                    break;
+                case "3":
+                    if (kickCounterPlayerTwo <= kickFrames && frameCounterTwo == frameDelay)
+                    { kickCounterPlayerTwo++; }
+                    if (kickCounterPlayerTwo >= kickFrames)
+                    { kickCounterPlayerTwo = 0; }
+                    break;
+                case "4":
+                    if (hKickCounterPlayerTwo <= hKickFrames && frameCounterTwo == frameDelay)
+                    { hKickCounterPlayerTwo++; }
+                    if (hKickCounterPlayerTwo >= hKickFrames)
+                    { hKickCounterPlayerTwo = 0; }
+                    break;
+                case "blank":
+                    if (idleCounterPlayerTwo <= idleFrames && frameCounterTwo == frameDelay)
+                    { idleCounterPlayerTwo++; }
+                    if (idleCounterPlayerTwo >= idleFrames)
+                    { idleCounterPlayerTwo = 0; }
+                    break;
+            }
         }
 
         private void drawStartScreen() //draw textures for start screen
@@ -522,6 +776,339 @@ namespace Menus
 
         private void drawInGameScreen() //draw textures for in game (TODO)
         {
+            SpriteBatch.Begin();
+
+            if (selectedStage == 1) { SpriteBatch.Draw(northwesternStageBackground, new Rectangle(0, 0, 1024, 768), Color.White); }
+            if (selectedStage == 2) { SpriteBatch.Draw(centralStageBackground, new Rectangle(0, 0, 1024, 768), Color.White); }
+
+            Rectangle playerOneIcon = new Rectangle(28, 28, 88, 88);
+            Rectangle playerTwoIcon = new Rectangle(inGameHeader.Width - 28 - 88, 28, 88, 88);
+
+            SpriteBatch.Draw(inGameHeader, new Rectangle(0, 0, inGameHeader.Width, inGameHeader.Height), Color.White);
+
+            switch (playerOneCharacter)
+            {
+                case 1: SpriteBatch.Draw(characterOneIcon, playerOneIcon, Color.White); break;
+                case 2: SpriteBatch.Draw(characterTwoIcon, playerOneIcon, Color.White); break;
+                case 3: SpriteBatch.Draw(characterThreeIcon, playerOneIcon, Color.White); break;
+                case 4: SpriteBatch.Draw(characterFourIcon, playerOneIcon, Color.White); break;
+                case 5: SpriteBatch.Draw(characterFiveIcon, playerOneIcon, Color.White); break;
+                case 6: SpriteBatch.Draw(characterSixIcon, playerOneIcon, Color.White); break;
+                case 7: SpriteBatch.Draw(characterSevenIcon, playerOneIcon, Color.White); break;
+                case 8: SpriteBatch.Draw(characterEightIcon, playerOneIcon, Color.White); break;
+                case 9: SpriteBatch.Draw(characterNineIcon, playerOneIcon, Color.White); break;
+            }
+
+            switch (playerTwoCharacter)
+            {
+                case 1: SpriteBatch.Draw(characterOneIcon, playerTwoIcon, Color.White); break;
+                case 2: SpriteBatch.Draw(characterTwoIcon, playerTwoIcon, Color.White); break;
+                case 3: SpriteBatch.Draw(characterThreeIcon, playerTwoIcon, Color.White); break;
+                case 4: SpriteBatch.Draw(characterFourIcon, playerTwoIcon, Color.White); break;
+                case 5: SpriteBatch.Draw(characterFiveIcon, playerTwoIcon, Color.White); break;
+                case 6: SpriteBatch.Draw(characterSixIcon, playerTwoIcon, Color.White); break;
+                case 7: SpriteBatch.Draw(characterSevenIcon, playerTwoIcon, Color.White); break;
+                case 8: SpriteBatch.Draw(characterEightIcon, playerTwoIcon, Color.White); break;
+                case 9: SpriteBatch.Draw(characterNineIcon, playerTwoIcon, Color.White); break;
+            }
+
+            switch (playerOneHealth)
+            {
+                case 100:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(304, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(328, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(352, 16, 16, 24), Color.White);
+                    break;
+                case 90:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(304, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(328, 16, 16, 24), Color.White);
+                    break;
+                case 80:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(304, 16, 16, 24), Color.White);
+                    break;
+                case 70:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(280, 16, 16, 24), Color.White);
+                    break;
+                case 60:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(256, 16, 16, 24), Color.White);
+                    break;
+                case 50:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(232, 16, 16, 24), Color.White);
+                    break;
+                case 40:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(208, 16, 16, 24), Color.White);
+                    break;
+                case 30:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(184, 16, 16, 24), Color.White);
+                    break;
+                case 20:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(160, 16, 16, 24), Color.White);
+                    break;
+                case 10:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(136, 16, 16, 24), Color.White);
+                    break;
+                case 0:
+                    break;
+            }
+
+            switch (playerTwoHealth)
+            {
+                case 100:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 304, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 328, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 352, 16, 16, 24), Color.White);
+                    break;
+                case 90:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 304, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 328, 16, 16, 24), Color.White);
+                    break;
+                case 80:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 280, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 304, 16, 16, 24), Color.White);
+                    break;
+                case 70:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 256, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 280, 16, 16, 24), Color.White);
+                    break;
+                case 60:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 256, 16, 16, 24), Color.White);
+                    break;
+                case 50:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 232, 16, 16, 24), Color.White);
+                    break;
+                case 40:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 208, 16, 16, 24), Color.White);
+                    break;
+                case 30:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 184, 16, 16, 24), Color.White);
+                    break;
+                case 20:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 160, 16, 16, 24), Color.White);
+                    break;
+                case 10:
+                    SpriteBatch.Draw(healthPoint, new Rectangle(1024 - 16 - 136, 16, 16, 24), Color.White);
+                    break;
+                case 0:
+                    break;
+            }
+
+            switch (playerOneSpecial)
+            {
+                case 0: break;
+                case 1:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(136, 48, 24, 32), Color.White);
+                    break;
+                case 2:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(168, 48, 24, 32), Color.White);
+                    break;
+                case 3:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(200, 48, 24, 32), Color.White);
+                    break;
+                case 4:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(200, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(232, 48, 24, 32), Color.White);
+                    break;
+                case 5:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(200, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(232, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(264, 48, 24, 32), Color.White);
+                    break;               
+            }
+
+            switch (playerTwoSpecial)
+            {
+                case 0: break;
+                case 1:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 136, 48, 24, 32), Color.White);
+                    break;
+                case 2:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 168, 48, 24, 32), Color.White);
+                    break;
+                case 3:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 200, 48, 24, 32), Color.White);
+                    break;
+                case 4:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 200, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 232, 48, 24, 32), Color.White);
+                    break;
+                case 5:
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 136, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 168, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 200, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 232, 48, 24, 32), Color.White);
+                    SpriteBatch.Draw(specialPoint, new Rectangle(1024 - 24 - 264, 48, 24, 32), Color.White);
+                    break;
+            }
+
+            SpriteBatch.End();
+
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+
+            SpriteEffects flip = SpriteEffects.FlipHorizontally;
+
+           
+
+
+
+            switch (playerOnePressedControl)
+            {
+                case "up":
+                    SpriteBatch.Draw(jumpAnimation, new Rectangle(playerOneX, 300, (jumpAnimation.Width * 4) / jumpFrames, jumpAnimation.Height * 4), new Rectangle((jumpAnimation.Width / jumpFrames) * jumpCounter, 0, (jumpAnimation.Width / jumpFrames), jumpAnimation.Height), Color.White);
+                    break;
+                case "down":
+                    SpriteBatch.Draw(crouchAnimation, new Rectangle(playerOneX, 300, (crouchAnimation.Width * 4) / crouchFrames, crouchAnimation.Height * 4), new Rectangle((crouchAnimation.Width / crouchFrames) * crouchCounter, 0, (crouchAnimation.Width / crouchFrames), crouchAnimation.Height), Color.White);
+                    break;
+                case "left":
+                    SpriteBatch.Draw(walkAnimation, new Rectangle(playerOneX, 300, (walkAnimation.Width * 4) / walkFrames, walkAnimation.Height * 4), new Rectangle((walkAnimation.Width / walkFrames) * walkCounter, 0, (walkAnimation.Width / walkFrames), walkAnimation.Height), Color.White);
+                    break;
+                case "right":
+                    SpriteBatch.Draw(walkAnimation, new Rectangle(playerOneX, 300, (walkAnimation.Width * 4) / walkFrames, walkAnimation.Height * 4), new Rectangle((walkAnimation.Width / walkFrames) * walkCounter, 0, (walkAnimation.Width / walkFrames), walkAnimation.Height), Color.White);
+                    break;
+                case "1":
+                    SpriteBatch.Draw(punchAnimation, new Rectangle(playerOneX, 300, (punchAnimation.Width * 4) / punchFrames, punchAnimation.Height * 4), new Rectangle((punchAnimation.Width / punchFrames) * punchCounter, 0, (punchAnimation.Width / punchFrames), punchAnimation.Height), Color.White);
+                    break;
+                case "2":
+                    SpriteBatch.Draw(hPunchAnimation, new Rectangle(playerOneX, 300, (hPunchAnimation.Width * 4) / hPunchFrames, hPunchAnimation.Height * 4), new Rectangle((hPunchAnimation.Width / hPunchFrames) * hPunchCounter, 0, (hPunchAnimation.Width / hPunchFrames), hPunchAnimation.Height), Color.White);
+                    break;
+                case "3":
+                    SpriteBatch.Draw(kickAnimation, new Rectangle(playerOneX, 300, (kickAnimation.Width * 4) / kickFrames, kickAnimation.Height * 4), new Rectangle((kickAnimation.Width / kickFrames) * kickCounter, 0, (kickAnimation.Width / kickFrames), kickAnimation.Height), Color.White);
+                    break;
+                case "4":
+                    SpriteBatch.Draw(hKickAnimation, new Rectangle(playerOneX, 300, (hKickAnimation.Width * 4) / hKickFrames, hKickAnimation.Height * 4), new Rectangle((hKickAnimation.Width / hKickFrames) * hKickCounter, 0, (hKickAnimation.Width / hKickFrames), hKickAnimation.Height), Color.White);
+                    break;
+                case "blank":
+                    SpriteBatch.Draw(idleAnimation, new Rectangle(playerOneX, 300, (idleAnimation.Width * 4) / idleFrames, idleAnimation.Height * 4), new Rectangle((idleAnimation.Width / idleFrames) * idleCounter, 0, (idleAnimation.Width / idleFrames), idleAnimation.Height), Color.White);
+                    break;
+            }
+
+            switch (playerTwoPressedControl)
+            {
+                case "up":
+                    SpriteBatch.Draw(jumpAnimation, new Rectangle(playerTwoX, 300, (jumpAnimation.Width * 4) / jumpFrames, jumpAnimation.Height * 4), new Rectangle((jumpAnimation.Width / jumpFrames) * jumpCounterPlayerTwo, 0, (jumpAnimation.Width / jumpFrames), jumpAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "down":
+                    SpriteBatch.Draw(crouchAnimation, new Rectangle(playerTwoX, 300, (crouchAnimation.Width * 4) / crouchFrames, crouchAnimation.Height * 4), new Rectangle((crouchAnimation.Width / crouchFrames) * crouchCounterPlayerTwo, 0, (crouchAnimation.Width / crouchFrames), crouchAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "left":
+                    SpriteBatch.Draw(walkAnimation, new Rectangle(playerTwoX, 300, (walkAnimation.Width * 4) / walkFrames, walkAnimation.Height * 4), new Rectangle((walkAnimation.Width / walkFrames) * walkCounterPlayerTwo, 0, (walkAnimation.Width / walkFrames), walkAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "right":
+                    SpriteBatch.Draw(walkAnimation, new Rectangle(playerTwoX, 300, (walkAnimation.Width * 4) / walkFrames, walkAnimation.Height * 4), new Rectangle((walkAnimation.Width / walkFrames) * walkCounterPlayerTwo, 0, (walkAnimation.Width / walkFrames), walkAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "1":
+                    SpriteBatch.Draw(punchAnimation, new Rectangle(playerTwoX, 300, (punchAnimation.Width * 4) / punchFrames, punchAnimation.Height * 4), new Rectangle((punchAnimation.Width / punchFrames) * punchCounterPlayerTwo, 0, (punchAnimation.Width / punchFrames), punchAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "2":
+                    SpriteBatch.Draw(hPunchAnimation, new Rectangle(playerTwoX, 300, (hPunchAnimation.Width * 4) / hPunchFrames, hPunchAnimation.Height * 4), new Rectangle((hPunchAnimation.Width / hPunchFrames) * hPunchCounterPlayerTwo, 0, (hPunchAnimation.Width / hPunchFrames), hPunchAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "3":
+                    SpriteBatch.Draw(kickAnimation, new Rectangle(playerTwoX, 300, (kickAnimation.Width * 4) / kickFrames, kickAnimation.Height * 4), new Rectangle((kickAnimation.Width / kickFrames) * kickCounterPlayerTwo, 0, (kickAnimation.Width / kickFrames), kickAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "4":
+                    SpriteBatch.Draw(hKickAnimation, new Rectangle(playerTwoX, 300, (hKickAnimation.Width * 4) / hKickFrames, hKickAnimation.Height * 4), new Rectangle((hKickAnimation.Width / hKickFrames) * hKickCounterPlayerTwo, 0, (hKickAnimation.Width / hKickFrames), hKickAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+                case "blank":
+                    SpriteBatch.Draw(idleAnimation, new Rectangle(playerTwoX, 300, (idleAnimation.Width * 4) / idleFrames, idleAnimation.Height * 4), new Rectangle((idleAnimation.Width / idleFrames) * idleCounterPlayerTwo, 0, (idleAnimation.Width / idleFrames), idleAnimation.Height), Color.White, 0.0f, new Vector2(0, 0), flip, 0.0f);
+                    break;
+            }
+
+            SpriteBatch.End();
         }
 
         public Game1() //start the game
@@ -590,6 +1177,28 @@ namespace Menus
             showControlsButtonIdle = Content.Load<Texture2D>("showControlsButtonIdle");
             showControlsButtonSelected = Content.Load<Texture2D>("showControlsButtonSelected");
             infoPane = Content.Load<Texture2D>("infoPane");
+            centralStageBackground = Content.Load<Texture2D>("CentralStageBackground");
+            northwesternStageBackground = Content.Load<Texture2D>("NorthwesternStageBackground");
+            inGameHeader = Content.Load<Texture2D>("inGameHeader");
+            healthPoint = Content.Load<Texture2D>("healthPoint");
+            specialPoint = Content.Load<Texture2D>("specialPoint");
+            idleAnimation = Content.Load<Texture2D>("idleAnimation");
+            walkAnimation = Content.Load<Texture2D>("walkAnimation");
+            jumpAnimation = Content.Load<Texture2D>("jumpAnimation");
+            punchAnimation = Content.Load<Texture2D>("punchAnimation");
+            hPunchAnimation = Content.Load<Texture2D>("hPunchAnimation");
+            kickAnimation = Content.Load<Texture2D>("kickAnimation");
+            hKickAnimation = Content.Load<Texture2D>("hKickAnimation");
+            hitAnimation = Content.Load<Texture2D>("hitAnimation");
+            crouchAnimation = Content.Load<Texture2D>("crouchAnimation");
+            crouchHitAnimation = Content.Load<Texture2D>("crouchHitAnimation");
+            winAnimation = Content.Load<Texture2D>("winAnimation");
+            koAnimation = Content.Load<Texture2D>("koAnimation");
+
+            //load all sounds
+
+            menuClick = Content.Load<SoundEffect>("menuClick");
+            menuBeep = Content.Load<SoundEffect>("menuBeep");
 
             activeMenu = "start"; //start the game on the start menu
         }
@@ -607,6 +1216,7 @@ namespace Menus
             GamePadState playerTwoState = GamePad.GetState(PlayerIndex.Two);
 
             globalTicks++; //add to the timer every update (use this for timers that need to be maintained between menus)
+            soundTicks++;
 
             switch (activeMenu) //switch what menu logic is used based on the selected menu
             {
@@ -705,6 +1315,15 @@ namespace Menus
             {
                 playerTwoPressedControl = "blank";
             }
+
+            if (playerOnePressedControl != "blank" && playerOnePressedControl != "1" && activeMenu != "inGame" && soundTicks >= 10) { menuClick.Play(); soundTicks = 0; }
+            if (playerTwoPressedControl != "blank" && playerTwoPressedControl != "1" && activeMenu != "inGame" && soundTicks >= 10) { menuClick.Play(); soundTicks = 0; }
+            if (playerOnePressedControl == "1" && activeMenu != "inGame" && soundTicks >= 10) { menuBeep.Play(); soundTicks = 0; }
+            if (playerTwoPressedControl == "1" && activeMenu != "inGame" && soundTicks >= 10) { menuBeep.Play(); soundTicks = 0; }
+
+
+
+
 
         }
 
