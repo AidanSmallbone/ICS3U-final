@@ -1215,6 +1215,10 @@ namespace Menus
             GamePadState playerOneState = GamePad.GetState(PlayerIndex.One);
             GamePadState playerTwoState = GamePad.GetState(PlayerIndex.Two);
 
+            KeyboardState playerOneKBState = Keyboard.GetState();
+            KeyboardState playerTwoKBState = Keyboard.GetState();
+
+
             globalTicks++; //add to the timer every update (use this for timers that need to be maintained between menus)
             soundTicks++;
 
@@ -1308,6 +1312,92 @@ namespace Menus
                 playerTwoPressedControl = "4";
             }
             else if (playerTwoState.Buttons.Start == ButtonState.Pressed) //start
+            {
+                playerTwoPressedControl = "start";
+            }
+            else //no key pressed
+            {
+                playerTwoPressedControl = "blank";
+            }
+
+            //player one input for kb
+
+            if (playerOneKBState.IsKeyDown(Keys.W)) //up
+            {
+                playerOnePressedControl = "up";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.A)) //left
+            {
+                playerOnePressedControl = "left";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.S)) //down
+            {
+                playerOnePressedControl = "down";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.D)) //right
+            {
+                playerOnePressedControl = "right";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.Z)) //1
+            {
+                playerOnePressedControl = "1";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.X)) //2
+            {
+                playerOnePressedControl = "2";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.C)) //3
+            {
+                playerOnePressedControl = "3";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.V)) //4
+            {
+                playerOnePressedControl = "4";
+            }
+            else if (playerOneKBState.IsKeyDown(Keys.LeftControl)) //start
+            {
+                playerOnePressedControl = "start";
+            }
+            else //no key pressed
+            {
+                playerOnePressedControl = "blank";
+            }
+
+            //player two input for kb
+
+            if (playerTwoKBState.IsKeyDown(Keys.I)) //up
+            {
+                playerTwoPressedControl = "up";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.J)) //left
+            {
+                playerTwoPressedControl = "left";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.K)) //down
+            {
+                playerTwoPressedControl = "down";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.L)) //right
+            {
+                playerTwoPressedControl = "right";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.N)) //1
+            {
+                playerTwoPressedControl = "1";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.M)) //2
+            {
+                playerTwoPressedControl = "2";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.OemComma)) //3
+            {
+                playerTwoPressedControl = "3";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.OemPeriod)) //4
+            {
+                playerTwoPressedControl = "4";
+            }
+            else if (playerTwoKBState.IsKeyDown(Keys.RightControl)) //start
             {
                 playerTwoPressedControl = "start";
             }
